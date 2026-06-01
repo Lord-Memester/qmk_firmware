@@ -115,14 +115,14 @@ bool per_key_rgb_effect_runner_reactive_splash(uint8_t start, effect_params_t *p
         }
         hsv.h = per_key_led[i].h;
         hsv.s = per_key_led[i].s;
-        
+
         //    hsv.v = per_key_led[i].v;
         if (per_key_led[i].v > 0) {
             hsv.v = scale8(hsv.v, rgb_matrix_config.hsv.v);
         } else {
             hsv.v = 0;
         }
-        
+
         RGB rgb = hsv_to_rgb(hsv);
         rgb_matrix_region_set_color(params->region, i, rgb.r, rgb.g, rgb.b);
     }
