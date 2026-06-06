@@ -1,3 +1,5 @@
+//#define RGB_MATRIX_INDICATORS_ENABLE
+
 /* Copyright 2024 ~ 2026 @ Keychron (https://www.keychron.com)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,11 +27,14 @@
 #    define RGB_MATRIX_LED_COUNT 108
 
 /* Indications */
-/* Order is typically NUM, CAPS, SCROLL*/
 #    define NUM_LOCK_INDEX 17
 #    define CAPS_LOCK_INDEX 18
 #    define SCROLL_LOCK_INDEX 19
 #    define LOW_BAT_IND_INDEX \
         { 98 }
+
+/* GUI Lock LED Indicators - Q6 Max ANSI encoder layout */
+#    define WINLOCK_LED_LIST \
+        { 96, 101 }
 
 #endif
