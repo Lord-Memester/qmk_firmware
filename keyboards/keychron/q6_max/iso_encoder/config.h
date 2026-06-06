@@ -27,6 +27,8 @@
 /* Indications */
 #    define NUM_LOCK_INDEX 37
 #    define CAPS_LOCK_INDEX 62
+#    define WINLOCK_LED_LIST \
+        { 98, 100 }
 #    define LOW_BAT_IND_INDEX \
         { 99 }
 

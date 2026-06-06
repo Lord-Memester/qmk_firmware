@@ -122,3 +122,4 @@ via*.json
 /keyboards/**/keymaps/via/*
 /keyboards/**/keymaps/vial/*
 keyboards/keychron/keychron.7z
+*.7z

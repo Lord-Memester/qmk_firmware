@@ -61,6 +61,12 @@ uint32_t siri_timer     = 0;
 #if defined(WIN_LOCK_HOLD_TIME)
 static uint32_t winlock_timer = 0;
 #endif
+#ifndef CAPS_LOCK_HOLD_TIME
+#    define CAPS_LOCK_HOLD_TIME 250
+#endif
+static uint32_t caps_lock_timer   = 0;
+static bool     caps_lock_toggled  = false;
+static bool     app_key_blocked    = false;
 #if defined(KEYCOMBO_OS_SELECT_ENABLE)
 static uint32_t os_keycombo_timer   = 0;
 static uint16_t os_selected_keycode = 0;
@@ -198,6 +204,27 @@ bool process_record_keychron_common(uint16_t keycode, keyrecord_t *record) {
             }
             return false; // Skip all further processing of this key
 #endif
+        case KC_CAPS:
+            if (record->event.pressed) {
+                caps_lock_timer  = timer_read32();
+                caps_lock_toggled = false;
+            } else {
+                caps_lock_timer  = 0;
+                caps_lock_toggled = false;
+            }
+            return false; // Skip all further processing of this key
+        case KC_APP:
+            if (record->event.pressed) {
+                if (keymap_config.no_gui) {
+                    app_key_blocked = true;
+                    return false;
+                }
+                app_key_blocked = false;
+            } else if (app_key_blocked) {
+                app_key_blocked = false;
+                return false;
+            }
+            break;
         case KC_TASK:
         case KC_FILE:
 #ifdef KC_SNAP
@@ -327,6 +354,13 @@ void keychron_common_task(void) {
         RGB color = {.r = 255, .g = 0, .b = 0};
         backlight_indicator_start(250, 250, 3, color);
         os_keycombo_timer = 0;
+    }
+#endif
+#if defined(CAPS_LOCK_HOLD_TIME)
+    if (caps_lock_timer && !caps_lock_toggled && timer_elapsed32(caps_lock_timer) > CAPS_LOCK_HOLD_TIME) {
+        tap_code(KC_CAPS);
+        caps_lock_toggled = true;
+        caps_lock_timer   = 0;
     }
 #endif
 #if defined(KEYCOMBO_OS_TOGGLE_ENABLE) && defined(KEYCOMBO_OS_TOGGLE_HOLD_TIME)

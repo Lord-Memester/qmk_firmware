@@ -29,6 +29,8 @@
 #    define NUM_LOCK_INDEX 17
 #    define CAPS_LOCK_INDEX 18
 #    define SCROLL_LOCK_INDEX 19
+#    define WINLOCK_LED_LIST \
+        { 96, 101 }
 #    define LOW_BAT_IND_INDEX \
         { 98 }
 
