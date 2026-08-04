@@ -32,11 +32,7 @@ bool per_key_rgb_solid(effect_params_t *params) {
 
     for (uint8_t i = led_min; i < led_max; i++) {
         hsv     = per_key_led[i];
-        // If per-key brightness is 0, keep it off (don't apply global brightness)
-        // Otherwise, apply global brightness
-        if (per_key_led[i].v > 0) {
-            hsv.v = rgb_matrix_config.hsv.v;
-        }
+        hsv.v   = rgb_matrix_config.hsv.v;
         RGB rgb = hsv_to_rgb(hsv);
         rgb_matrix_region_set_color(params->region, i, rgb.r, rgb.g, rgb.b);
     }
@@ -50,12 +46,7 @@ bool per_key_rgb_breathing(effect_params_t *params) {
 
     for (uint8_t i = led_min; i < led_max; i++) {
         hsv     = per_key_led[i];
-        // If per-key brightness is 0, keep it off during breathing
-        if (per_key_led[i].v > 0) {
-            hsv.v = scale8(abs8(sin8(time) - 128) * 2, rgb_matrix_config.hsv.v);
-        } else {
-            hsv.v = 0;
-        }
+        hsv.v   = scale8(abs8(sin8(time) - 128) * 2, rgb_matrix_config.hsv.v);
         RGB rgb = hsv_to_rgb(hsv);
         RGB_MATRIX_TEST_LED_FLAGS();
         rgb_matrix_region_set_color(params->region, i, rgb.r, rgb.g, rgb.b);
@@ -83,12 +74,10 @@ bool per_key_rgb_reactive_simple(effect_params_t *params) {
         HSV      hsv    = per_key_led[i];
 
         if (offset > 255) offset = 255;
+        hsv.v = scale8(255 - offset, rgb_matrix_config.hsv.v);
+
+        // if (per_key_led[i].v < hsv.v)
         //     hsv.v = per_key_led[i].v;
-        if (per_key_led[i].v > 0) {
-            hsv.v = scale8(255 - offset, rgb_matrix_config.hsv.v);
-        } else {
-            hsv.v = 0;
-        }
 
         RGB rgb = hsv_to_rgb(hsv);
         rgb_matrix_region_set_color(params->region, i, rgb.r, rgb.g, rgb.b);
@@ -115,14 +104,9 @@ bool per_key_rgb_effect_runner_reactive_splash(uint8_t start, effect_params_t *p
         }
         hsv.h = per_key_led[i].h;
         hsv.s = per_key_led[i].s;
-        
+        hsv.v = scale8(hsv.v, rgb_matrix_config.hsv.v);
+        // if (per_key_led[i].v < hsv.v)
         //    hsv.v = per_key_led[i].v;
-        if (per_key_led[i].v > 0) {
-            hsv.v = scale8(hsv.v, rgb_matrix_config.hsv.v);
-        } else {
-            hsv.v = 0;
-        }
-        
         RGB rgb = hsv_to_rgb(hsv);
         rgb_matrix_region_set_color(params->region, i, rgb.r, rgb.g, rgb.b);
     }
